@@ -34,5 +34,3 @@ async function main() {
     })
     .catch((e) => console.error(e.stack));
 }
-
-main();
