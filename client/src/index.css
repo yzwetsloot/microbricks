@@ -7,7 +7,41 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+img {
+  height: 80%;
+  width: auto;
+  max-width: 80%;
+}
+
+ul {
+  padding-inline-start: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+a:visited {
+  color: black;
+}
+
+.product-container {
+  display: flex;
+}
+
+.product-container .ProductInfo {
+  flex: 4
+}
+
+.product-container .img-box {
+  flex: 1;
+}
+
+.img-box { 
+  margin: auto;
+}
+
+.date-box {
+  font-size: 0.7em;
+  color: #bbb;
 }
