@@ -1,10 +1,9 @@
 import React from "react";
 import SearchBar from "./components/SearchBar";
 import ProductList from "./components/ProductList";
+import Header from "./components/Header";
 import mockData from "./mock";
 
-
-import logo from "./logo.svg";
 import "./App.css";
 
 
@@ -31,10 +30,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-        </header>
-        <h1>MicroBricks</h1>
+        <Header />
         <SearchBar search={ this.search } />
         <ProductList products={ this.state.products } />
       </div>

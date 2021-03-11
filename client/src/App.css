@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
 .App {
   text-align: center;
 }
@@ -7,20 +9,46 @@
   pointer-events: none;
 }
 
-.SearchBar {
+.SearchBar button {
+  padding: 9px 13px;
+  background: #9c88ff;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
 
+.SearchBar button:hover {
+  background: #ccc;
+}
+
+.SearchBar button:focus {
+  outline-width: 0;
+}
+
+.SearchBar input[type=text] {
+  padding: 9px;
+  padding-right: 20%;
+  font-size: 17px;
+  border: none;
+}
+
+.SearchBar input[type=text]:focus {
+  outline-width: 0;
 }
 
 .ProductList {
-  width: 70%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .Product {
-  border: 2px #ccc solid;
+  background-color: #fff;
+  color: #333;
+  position: relative;
   padding: 10px;
-  margin: 20px;
+  margin: 11px 0;
+  border-left: 4px solid #9c88ff;
 }
 
 .ProductInfo {
