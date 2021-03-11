@@ -1,7 +1,8 @@
 import React from "react";
-import SearchBar from "./components/SearchBar";
-import ProductList from "./components/ProductList";
 import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import ResultBar from "./components/ResultBar";
+import ProductList from "./components/ProductList";
 import mockData from "./mock";
 
 import "./App.css";
@@ -11,7 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { products: mockData };
+    this.state = { products: mockData, loading: false };
 
     this.search = this.search.bind(this);
   }
@@ -19,12 +20,15 @@ class App extends React.Component {
   search(e) {
     e.preventDefault();
 
-    const target = e.target[0];
-    const query = target.value;
+    this.setState({ loading: true });
 
-    fetch(`/?q=${query}`)
+    // const target = e.target[0];
+    // const query = target.value;
+
+    fetch(`http://localhost:9000/search`)
       .then(response => response.json())
-      .then(body => this.setState({ products: body }))
+      .then(body => this.setState({ products: body, loading: false }))
+      // .then(data => console.log(data))
       .catch(err => console.error(err.stack));
   }
 
@@ -33,7 +37,8 @@ class App extends React.Component {
       <div className="App">
         <Header />
         <SearchBar search={ this.search } />
-        <ProductList products={ this.state.products } />
+        <ResultBar count={this.state.products.length} />
+        <ProductList products={ this.state.products } loading={ this.state.loading } />
       </div>
     );
   }

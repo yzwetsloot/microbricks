@@ -37,7 +37,7 @@
   outline-width: 0;
 }
 
-.ProductList {
+.ProductList, #result-bar {
   width: 60%;
   margin-left: auto;
   margin-right: auto;
