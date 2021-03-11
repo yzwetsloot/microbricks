@@ -18,13 +18,14 @@ class App extends React.Component {
 
   search(e) {
     e.preventDefault();
-    const query = e.target[0].value;
-    console.log(query);
+
+    const target = e.target[0];
+    const query = target.value;
 
     fetch(`/?q=${query}`)
       .then(response => response.json())
       .then(body => this.setState({ products: body }))
-      .catch(console.log);
+      .catch(err => console.error(err.stack));
   }
 
   render() {

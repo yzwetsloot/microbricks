@@ -27,9 +27,10 @@
 
 .SearchBar input[type=text] {
   padding: 9px;
-  padding-right: 20%;
+  width: 25%;
   font-size: 17px;
   border: none;
+  color: #8e8e8e;
 }
 
 .SearchBar input[type=text]:focus {
@@ -49,6 +50,7 @@
   padding: 10px;
   margin: 11px 0;
   border-left: 4px solid #9c88ff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .ProductInfo {

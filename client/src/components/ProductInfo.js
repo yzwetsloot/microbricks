@@ -1,18 +1,31 @@
 function ProductInfo(props) {
   return (
-    <div class="ProductInfo">
+    <div className="ProductInfo">
       <a href={props.info.url} target="_blank" rel="noreferrer">
-        <h4>{props.info.title} <i class="fas fa-external-link-alt"></i></h4>
+        <h4>{props.info.title} <i className="fas fa-external-link-alt"></i></h4>
       </a>
-      <ul>
-        <li>EAN: {props.info.ean}</li>
-        <li>
-          Rating: {props.info.rating} ({props.info.score})
-        </li>
-        <li>Reference price: {props.info.price}</li>
-        <li>Category: {props.info.category}</li>
-        <li>Velocity: {props.info.velocity}</li>
-      </ul>
+      <table className="info-table">
+            <tr>
+                <th>EAN</th>
+                <td>{props.info.ean}</td>
+            </tr>
+            <tr>
+                <th>Rating</th>
+                <td>{props.info.rating} ({props.info.score})</td>
+            </tr>
+            <tr>
+                <th>Reference price</th>
+                <td>{props.info.price} &euro;</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{props.info.category}</td>
+            </tr>
+            <tr>
+                <th>Velocity</th>
+                <td className={props.info.velocity > 0.7 ? "high-velocity" : "low-velocity"}>{props.info.velocity}</td>
+            </tr>
+        </table>
     </div>
   );
 }

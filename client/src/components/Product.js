@@ -4,14 +4,14 @@ function Product(props) {
   const lastModified = new Date(props.info.last_modified);
 
   return (
-    <div class="Product">
-      <div class="product-container">
-        <div class="img-box">
+    <div className="Product">
+      <div className="product-container">
+        <div className="img-box">
           <img src={props.info.image} alt={props.info.title} />
         </div>
         <ProductInfo info={props.info} />
       </div>
-      <p class="date-box"><i class="fas fa-clock"></i> {lastModified.toLocaleString('nl-NL')} </p>
+      <p className="date-box"><i className="fas fa-clock"></i> {lastModified.toLocaleString('nl-NL')} </p>
     </div>
   );
 }
