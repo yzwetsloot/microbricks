@@ -18,7 +18,7 @@
 }
 
 .SearchBar button:hover {
-  background: #ccc;
+  background: #8b77dd;
 }
 
 .SearchBar button:focus {
@@ -31,6 +31,7 @@
   font-size: 17px;
   border: none;
   color: #8e8e8e;
+  background-color: #e8f0fe;
 }
 
 .SearchBar input[type=text]:focus {
@@ -38,7 +39,7 @@
 }
 
 .ProductList, #result-bar {
-  width: 60%;
+  width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -47,12 +48,8 @@
   background-color: #fff;
   color: #333;
   position: relative;
-  padding: 10px;
-  margin: 11px 0;
+  padding: 10px 10px 4px 10px;
+  margin-top: 11px;
   border-left: 4px solid #9c88ff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.ProductInfo {
-  text-align: left;
 }

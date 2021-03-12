@@ -4,7 +4,7 @@ function Header() {
   return (
     <>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <a href="/" style={{ display: "inline-block" }}><img src={logo} className="App-logo" alt="logo" /></a>
       </header>
       <h1>MicroBricks</h1>
     </>

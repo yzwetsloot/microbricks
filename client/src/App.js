@@ -22,14 +22,17 @@ class App extends React.Component {
 
     this.setState({ loading: true });
 
-    // const target = e.target[0];
-    // const query = target.value;
+    const target = e.target[0];
+    const query = target.value;
 
-    fetch(`http://localhost:9000/search`)
+    fetch(`http://localhost:9000/search?q=${query}`)
       .then(response => response.json())
       .then(body => this.setState({ products: body, loading: false }))
-      // .then(data => console.log(data))
-      .catch(err => console.error(err.stack));
+      .catch(err => {
+        console.error(err.stack);
+        this.setState({ loading: false }); 
+        // TODO: provide error feedback to user
+      });
   }
 
   render() {
