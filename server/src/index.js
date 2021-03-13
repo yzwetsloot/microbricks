@@ -1,21 +1,21 @@
+const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors");
 
 const _ = require("./util/config.js");
 const db = require("./util/db.js");
 
-const port = 9000;
-
 const app = express();
 
-app.use(morgan("combined"));
-app.use(cors());
-app.use(express.static("../client/build"));
+if (process.env.NODE_ENV === "dev") app.use(morgan("combined"));
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+if (process.env.NODE_ENV === "prod") {
+  app.use(express.static(path.join(__dirname, "../..", "client", "build")));
+
+  app.get("/", (req, res) =>
+    res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"))
+  );
+}
 
 app.get("/search", async (req, res, next) => {
   const queryParam = req.query.q;
@@ -23,7 +23,7 @@ app.get("/search", async (req, res, next) => {
   let result;
   try {
     result = await db.query(
-      "SELECT * FROM product WHERE title ILIKE $1 ORDER BY last_modified DESC LIMIT $2",
+      "SELECT * FROM product WHERE title ILIKE $1 OR id LIKE $1 OR ean LIKE $1 OR category ILIKE $1 ORDER BY last_modified DESC LIMIT $2",
       [`%${queryParam}%`, process.env.PRODUCT_LIMIT]
     );
   } catch (err) {
@@ -83,9 +83,13 @@ app.get("/product/:id", async (req, res, next) => {
   res.json(responseBody);
 });
 
-app.listen(port, () => {
-  console.info(`App listening at http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () =>
+  console.info(
+    `Server running in '${process.env.NODE_ENV}' mode listening on port ${PORT}`
+  )
+);
 
 function transformHistory(records) {
   if (!records.length) return [];
