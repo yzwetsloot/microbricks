@@ -3,9 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const _ = require("./util/config.js");
-const initDB = require("./util/db.js");
-const data = require("./util/data.js");
-const history = require("./util/history.js");
+const db = require("./util/db.js");
 
 const port = 9000;
 
@@ -13,44 +11,63 @@ const app = express();
 
 app.use(morgan("combined"));
 app.use(cors());
-app.use(express.static("../client/build"))
+app.use(express.static("../client/build"));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/search", (req, res) => {
-  const query = req.query.q;
-  console.info(`Received search query parameter '${query}'`);
+app.get("/search", async (req, res, next) => {
+  const queryParam = req.query.q;
 
-  setTimeout(() => res.json(data), 2000);
+  let result;
+  try {
+    result = await db.query(
+      "SELECT * FROM product WHERE title ILIKE $1 ORDER BY last_modified DESC LIMIT $2",
+      [`%${queryParam}%`, process.env.PRODUCT_LIMIT]
+    );
+  } catch (err) {
+    return next(err);
+  }
+
+  const data = result.rows;
+
+  res.json(data);
 });
 
-app.get("/product/:id", (req, res) => {
+app.get("/product/:id", async (req, res, next) => {
   const id = req.params.id;
-  console.info(`Received ID parameter '${id}'`);
 
-  const quantities = history.quantity;
-  const quantityValues = quantities.flatMap(item => [item.value, item.value]);
-  let quantityTimestamps = [quantities[0].first_retrieved];
-  const quantityTimestampsRest = quantities.flatMap(item => {
-    const lastModified = new Date(item.last_modified);
-    lastModified.setSeconds(lastModified.getSeconds() + 1);
-    return [item.last_modified, lastModified.toJSON()];
-  });
-  quantityTimestamps = quantityTimestamps.concat(quantityTimestampsRest);
-  quantityTimestamps.pop();
+  // retrieve price history
+  let result;
 
-  const prices = history.price;
-  const priceValues = prices.flatMap(item => [item.value, item.value]);
-  let priceTimestamps = [prices[0].first_retrieved];
-  const priceTimestampsRest = prices.flatMap(item => {
-    const lastModified = new Date(item.last_modified);
-    lastModified.setSeconds(lastModified.getSeconds() + 1);
-    return [item.last_modified, lastModified.toJSON()];
-  });
-  priceTimestamps = priceTimestamps.concat(priceTimestampsRest);
-  priceTimestamps.pop();
+  try {
+    result = await db.query(
+      "SELECT * FROM price WHERE id = $1 ORDER BY last_modified",
+      [id]
+    );
+  } catch (err) {
+    return next(err);
+  }
+
+  const priceHistory = result.rows;
+
+  // retrieve quantity history
+  try {
+    result = await db.query(
+      "SELECT * FROM quantity WHERE id = $1 ORDER BY last_modified",
+      [id]
+    );
+  } catch (err) {
+    return next(err);
+  }
+
+  const quantityHistory = result.rows;
+
+  const [priceTimestamps, priceValues] = transformHistory(priceHistory);
+  const [quantityTimestamps, quantityValues] = transformHistory(
+    quantityHistory
+  );
 
   const responseBody = {
     price: {
@@ -60,34 +77,29 @@ app.get("/product/:id", (req, res) => {
     quantity: {
       timestamps: quantityTimestamps,
       values: quantityValues,
-    }
-  }
+    },
+  };
 
   res.json(responseBody);
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.info(`App listening at http://localhost:${port}`);
 });
 
-async function main() {
-  console.info("Start application");
-  const client = await initDB();
+function transformHistory(records) {
+  if (!records.length) return [];
 
-  const id = "1001004001685534";
+  let recordTimestamps = [records[0].first_retrieved];
+  const partialTimestamps = records.flatMap((item) => {
+    const lastModified = item.last_modified;
+    lastModified.setSeconds(lastModified.getSeconds() + 1);
+    return [item.last_modified, lastModified];
+  });
+  recordTimestamps = recordTimestamps.concat(partialTimestamps);
+  recordTimestamps.pop();
 
-  client
-    .query("SELECT * FROM product WHERE id = $1", [id])
-    .then((res) => {
-      console.info(res.rows[0]);
-    })
-    .catch((e) => console.error(e.stack));
+  const recordValues = records.flatMap((item) => [item.value, item.value]);
 
-  client
-    .query("SELECT * FROM product LIMIT 5")
-    .then((res) => {
-      console.info(res.rows);
-      client.end();
-    })
-    .catch((e) => console.error(e.stack));
+  return [recordTimestamps, recordValues];
 }
