@@ -4,17 +4,20 @@ function ProductInfo(props) {
   return (
     <>
       <div className="container">
-        <a href={props.info.url} target="_blank" rel="noreferrer">
-          <h4>
-            {props.info.title} <i className="fas fa-external-link-alt"></i>
-          </h4>
-        </a>
+        <h4>
+          <a href={props.info.url} target="_blank" rel="noreferrer">
+            <i className="fas fa-external-link-alt"></i> {props.info.title}
+          </a>
+        </h4>
         <p className="date">
           <i className="fas fa-clock"></i>{" "}
           {lastModified.toLocaleString("nl-NL")}{" "}
         </p>
       </div>
-      <div className="container">
+      <div
+        className="container collapsible-container"
+        onClick={props.setCollapsible}
+      >
         <table className="info-table">
           <tbody>
             <tr>

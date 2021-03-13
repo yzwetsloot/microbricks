@@ -53,8 +53,8 @@ class Product extends React.Component {
 
   render() {
     return (
-      <li className="Product" onClick={this.getHistory}>
-        <ProductInfo info={this.props.info} />
+      <li className="Product">
+        <ProductInfo info={this.props.info} setCollapsible={this.getHistory} />
         {this.state.loading && <Loader type="ThreeDots" color="#9c88ff" />}
         {this.state.collapsible && (
           <ChartContainer

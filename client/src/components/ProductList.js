@@ -1,6 +1,7 @@
 import Loader from "react-loader-spinner";
 
 import Product from "./Product";
+import Pagination from "./Pagination";
 
 function ProductList(props) {
   if (props.loading) {
@@ -13,6 +14,11 @@ function ProductList(props) {
             <Product key={product.id} info={product} />
           ))}
         </ul>
+        <Pagination
+          page={props.page}
+          pageCount={props.pageCount}
+          onPageChange={props.onPageChange}
+        />
       </div>
     );
   }
