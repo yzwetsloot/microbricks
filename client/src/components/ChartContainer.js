@@ -12,7 +12,7 @@ function getChartConfig(title, timestamps, values, color) {
           data: values,
           backgroundColor: ["rgba(0, 0, 0, 0)"],
           borderColor: [color],
-          borderWidth: 1.5,
+          borderWidth: 1.8,
           pointRadius: 0,
         },
       ],
@@ -35,8 +35,13 @@ function getChartConfig(title, timestamps, values, color) {
       scales: {
         xAxes: [
           {
+            offset: true,
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10,
+            },
             gridLines: {
-              display: false,
+              drawOnChartArea: false,
             },
             type: "time",
           },
@@ -44,10 +49,12 @@ function getChartConfig(title, timestamps, values, color) {
         yAxes: [
           {
             gridLines: {
-              display: false,
+              drawOnChartArea: false,
             },
             ticks: {
+              autoSkip: true,
               beginAtZero: true,
+              maxTicksLimit: 7,
             },
           },
         ],
@@ -91,18 +98,10 @@ class ChartContainer extends React.Component {
     return (
       <div className="container">
         <div className="chart-container">
-          <canvas
-            id={"priceChart_" + this.props.id}
-            // width="50%"
-            // height="auto"
-          ></canvas>
+          <canvas id={"priceChart_" + this.props.id}></canvas>
         </div>
         <div className="chart-container">
-          <canvas
-            id={"quantityChart_" + this.props.id}
-            // width="50%"
-            // height="auto"
-          ></canvas>
+          <canvas id={"quantityChart_" + this.props.id}></canvas>
         </div>
       </div>
     );

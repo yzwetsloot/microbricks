@@ -1,4 +1,6 @@
 import React from "react";
+import Loader from "react-loader-spinner";
+
 import ProductInfo from "./ProductInfo";
 import ChartContainer from "./ChartContainer";
 
@@ -6,13 +8,29 @@ class Product extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { priceHistory: [], quantityHistory: [], loading: false, toggle: false };
+    this.state = {
+      priceHistory: [],
+      quantityHistory: [],
+      loading: false,
+      collapsible: false,
+      cache: false,
+    };
 
     this.getHistory = this.getHistory.bind(this);
   }
 
   getHistory(e) {
     e.preventDefault();
+
+    if (this.state.collapsible) {
+      this.setState({ collapsible: false });
+      return;
+    }
+
+    if (this.state.cache) {
+      this.setState({ collapsible: true });
+      return;
+    }
 
     this.setState({ loading: true });
 
@@ -23,7 +41,8 @@ class Product extends React.Component {
           priceHistory: body.price,
           quantityHistory: body.quantity,
           loading: false,
-          toggle: !this.state.toggle,
+          collapsible: true,
+          cache: true,
         })
       )
       .catch((err) => {
@@ -36,7 +55,8 @@ class Product extends React.Component {
     return (
       <li className="Product" onClick={this.getHistory}>
         <ProductInfo info={this.props.info} />
-        {this.state.toggle && (
+        {this.state.loading && <Loader type="ThreeDots" color="#9c88ff" />}
+        {this.state.collapsible && (
           <ChartContainer
             priceHistory={this.state.priceHistory}
             quantityHistory={this.state.quantityHistory}

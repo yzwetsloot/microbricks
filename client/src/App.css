@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
 
 .App {
   text-align: center;
@@ -25,7 +25,7 @@
   outline-width: 0;
 }
 
-.SearchBar input[type=text] {
+.SearchBar input[type="text"] {
   padding: 9px;
   width: 25%;
   font-size: 17px;
@@ -34,14 +34,24 @@
   background-color: #e8f0fe;
 }
 
-.SearchBar input[type=text]:focus {
+.SearchBar input[type="text"]:focus {
   outline-width: 0;
 }
 
-.ProductList, #result-bar {
+.ProductList,
+#result-bar {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .ProductList,
+  #result-bar {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .Product {
