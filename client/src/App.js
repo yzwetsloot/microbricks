@@ -1,13 +1,12 @@
 import React from "react";
 
+import config from "./config";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import ResultBar from "./components/ResultBar";
 import ProductList from "./components/ProductList";
 
 import "./App.css";
-
-const productPerPageCount = 20; // TODO dotenv configuration
 
 class App extends React.Component {
   constructor(props) {
@@ -27,10 +26,10 @@ class App extends React.Component {
     const target = e.target[0];
     const query = target.value;
 
-    fetch(`http://localhost:9000/search?q=${query}`)
+    fetch(`/search?q=${query}`)
       .then((response) => response.json())
       .then((body) => {
-        const pageCount = Math.ceil(body.length / productPerPageCount);
+        const pageCount = Math.ceil(body.length / config.productPerPageCount);
         this.setState({ products: body, loading: false, page: 0, pageCount });
       })
       .catch((err) => {
@@ -57,8 +56,8 @@ class App extends React.Component {
         <ResultBar count={this.state.products.length} />
         <ProductList
           products={this.state.products.slice(
-            this.state.page * productPerPageCount,
-            (this.state.page + 1) * productPerPageCount
+            this.state.page * config.productPerPageCount,
+            (this.state.page + 1) * config.productPerPageCount
           )}
           loading={this.state.loading}
           page={this.state.page}

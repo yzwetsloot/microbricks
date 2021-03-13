@@ -1,3 +1,5 @@
+import config from "../config";
+
 function ProductInfo(props) {
   const lastModified = new Date(props.info.last_modified);
 
@@ -34,7 +36,9 @@ function ProductInfo(props) {
               <td>{props.info.category}</td>
               <td
                 className={
-                  props.info.velocity > 0.7 ? "high-velocity" : "low-velocity"
+                  props.info.velocity > config.velocityTreshold
+                    ? "high-velocity"
+                    : "low-velocity"
                 }
               >
                 {props.info.velocity}

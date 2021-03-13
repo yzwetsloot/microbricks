@@ -34,7 +34,7 @@ class Product extends React.Component {
 
     this.setState({ loading: true });
 
-    fetch(`http://localhost:9000/product/${this.props.info.id}`)
+    fetch(`/product/${this.props.info.id}`)
       .then((response) => response.json())
       .then((body) =>
         this.setState({
