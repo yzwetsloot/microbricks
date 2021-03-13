@@ -1,5 +1,4 @@
 import React from "react";
-import { Route } from "react-router-dom";
 
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
@@ -33,8 +32,6 @@ class App extends React.Component {
         this.setState({ loading: false });
         // TODO: provide error feedback to user
       });
-
-    this.props.history.push(`/search?q=${query}`);
   }
 
   render() {
@@ -42,13 +39,11 @@ class App extends React.Component {
       <div className="App">
         <Header />
         <SearchBar search={this.search} />
-        <Route path="/search">
-          <ResultBar count={this.state.products.length} />
-          <ProductList
-            products={this.state.products}
-            loading={this.state.loading}
-          />
-        </Route>
+        <ResultBar count={this.state.products.length} />
+        <ProductList
+          products={this.state.products}
+          loading={this.state.loading}
+        />
       </div>
     );
   }
