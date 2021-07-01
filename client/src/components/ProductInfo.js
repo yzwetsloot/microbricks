@@ -36,7 +36,7 @@ function ProductInfo(props) {
               <td>{props.info.category}</td>
               <td
                 className={
-                  props.info.velocity > config.velocityTreshold
+                  props.info.velocity > config.velocityThreshold
                     ? "high-velocity"
                     : "low-velocity"
                 }
