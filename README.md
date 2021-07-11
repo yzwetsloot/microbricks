@@ -16,7 +16,7 @@ Simply use `git clone https://github.com/yzwetsloot/microbricks.git` to clone th
 
 ## Configuration
 Client uses `config.js` file to specify special configuration parameters (such as how many products should be rendered per page).  
-Server uses `.dotenv` file to specify environment variables, such as listening port, database configuration etc.
+Server uses `.env` file to specify environment variables, such as listening port, database configuration etc.
 
 ## Usage
 #### Client
