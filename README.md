@@ -29,6 +29,10 @@ Server uses `.env` file to specify environment variables, such as listening port
 - `npm run start`: run Express server
 - `npm run server`: run Express server using [nodemon](https://www.npmjs.com/package/nodemon)
 
+#### Docker
+- `docker build -t microbricks .`
+- `docker run -d --rm --name microbricks-app -p 80:80 microbricks`
+
 ## Notes
 - Project is still in development
 
