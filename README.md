@@ -31,7 +31,7 @@ Server uses `.env` file to specify environment variables, such as listening port
 
 #### Docker
 - `docker build -t microbricks .`
-- `docker run -d --rm --name microbricks-app -p 80:80 microbricks` (include `--net=host` if attempting to connect host machine)
+- `docker run -d --rm --name microbricks-app -p 80:80 microbricks` (include `--net=host` if attempting to connect to host machine)
 
 ## Notes
 - Project is still in development
