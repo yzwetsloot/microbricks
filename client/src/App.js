@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Route, useHistory, useLocation } from "react-router-dom";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
 import config from "./config";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
+import Statistics from "./components/Statistics";
 import ResultBar from "./components/ResultBar";
 import ErrorMessage from "./components/ErrorMessage";
 import ProductList from "./components/ProductList";
@@ -89,20 +90,25 @@ function App(props) {
     <div className="App">
       <Header />
       <SearchBar search={searchHandler} />
-      <Route path="/search">
-        <ResultBar count={products.length} />
-        {error && <ErrorMessage message={error} />}
-        <ProductList
-          products={products.slice(
-            page * config.productPerPageCount,
-            (page + 1) * config.productPerPageCount
-          )}
-          loading={loading}
-          page={page}
-          pageCount={pageCount}
-          onPageChange={onPageChangeHandler}
-        />
-      </Route>
+      <Switch>
+        <Route exact path="/">
+          <Statistics />
+        </Route>
+        <Route path="/search">
+          <ResultBar count={products.length} />
+          {error && <ErrorMessage message={error} />}
+          <ProductList
+            products={products.slice(
+              page * config.productPerPageCount,
+              (page + 1) * config.productPerPageCount
+            )}
+            loading={loading}
+            page={page}
+            pageCount={pageCount}
+            onPageChange={onPageChangeHandler}
+          />
+        </Route>
+      </Switch>
     </div>
   );
 }
