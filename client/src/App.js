@@ -1,72 +1,110 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Route, useHistory, useLocation } from "react-router-dom";
 
 import config from "./config";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import ResultBar from "./components/ResultBar";
+import ErrorMessage from "./components/ErrorMessage";
 import ProductList from "./components/ProductList";
 
 import "./App.css";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+function App(props) {
+  let history = useHistory();
+  let location = useLocation();
 
-    this.state = { products: [], page: 0, pageCount: 0, loading: false };
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    this.search = this.search.bind(this);
-    this.onPageChange = this.onPageChange.bind(this);
-  }
+  const queryProducts = (value, page = 0) => {
+    setError("");
 
-  search(e) {
-    e.preventDefault();
-
-    this.setState({ loading: true });
-
-    const target = e.target[0];
-    const query = target.value;
-
-    fetch(`/search?q=${query}`)
+    fetch(`/p/search?q=${value}`)
       .then((response) => response.json())
       .then((body) => {
+        console.info(`Retrieved ${body.length} products from database`);
+
         const pageCount = Math.ceil(body.length / config.productPerPageCount);
-        this.setState({ products: body, loading: false, page: 0, pageCount });
+
+        setProducts(body);
+        setLoading(false);
+        setPage(page || 0);
+        setPageCount(pageCount);
       })
       .catch((err) => {
         console.error(err.stack);
-        this.setState({ loading: false });
-        // TODO: provide error feedback to user
-      });
-  }
 
-  onPageChange(page) {
-    this.setState({ page });
+        setLoading(false);
+        setError("Failed to retrieve products from database");
+      });
+  };
+
+  const fromURL = () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get("q")) {
+      setLoading(true);
+
+      const value = queryParams.get("q");
+      queryProducts(value, parseInt(queryParams.get("page")) - 1);
+    } else {
+      setProducts([]);
+      setPage(0);
+      setPageCount(0);
+      setLoading(false);
+    }
+  };
+
+  // location change
+  useEffect(fromURL, [location]);
+
+  // componentDidMount
+  useEffect(fromURL, []);
+
+  const searchHandler = (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const target = e.target[0];
+    const value = target.value;
+
+    history.push(`/search?q=${value}`);
+    queryProducts(value);
+  };
+
+  const onPageChangeHandler = (page) => {
+    setPage(page);
     window.scrollTo({
       left: 0,
       top: 0,
       behavior: "smooth",
     });
-  }
+  };
 
-  render() {
-    return (
-      <div className="App">
-        <Header />
-        <SearchBar search={this.search} />
-        <ResultBar count={this.state.products.length} />
+  return (
+    <div className="App">
+      <Header />
+      <SearchBar search={searchHandler} />
+      <Route path="/search">
+        <ResultBar count={products.length} />
+        {error && <ErrorMessage message={error} />}
         <ProductList
-          products={this.state.products.slice(
-            this.state.page * config.productPerPageCount,
-            (this.state.page + 1) * config.productPerPageCount
+          products={products.slice(
+            page * config.productPerPageCount,
+            (page + 1) * config.productPerPageCount
           )}
-          loading={this.state.loading}
-          page={this.state.page}
-          pageCount={this.state.pageCount}
-          onPageChange={this.onPageChange}
+          loading={loading}
+          page={page}
+          pageCount={pageCount}
+          onPageChange={onPageChangeHandler}
         />
-      </div>
-    );
-  }
+      </Route>
+    </div>
+  );
 }
 
 export default App;

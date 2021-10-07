@@ -38,6 +38,21 @@
   outline-width: 0;
 }
 
+input:-webkit-autofill{
+  -webkit-text-fill-color: #8e8e8e !important;
+}
+
+.ErrorMessage {
+  text-align: center;
+  padding: 10px 2px;
+  margin-top: 20px;
+  border-left: 4px solid #ff3b62;
+  background-color: #ffecf0;
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .ProductList,
 #result-bar {
   width: 50%;

@@ -49,13 +49,6 @@ h4 {
 .container {
   display: flex;
 }
-/* 
-@media screen and (max-width: 1200px) {
-  .container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-} */
 
 .container h4,
 .container table {
@@ -137,6 +130,10 @@ th {
   color: #9c88ff;
   background-color: white;
   text-align: center;
+}
+
+.pagination-item:visited {
+  color: #9c88ff;
 }
 
 .pagination-item:hover {

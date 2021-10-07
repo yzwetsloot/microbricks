@@ -7,17 +7,13 @@ const db = require("./util/db.js");
 
 const app = express();
 
+const buildPath = path.join(__dirname, "../..", "client", "build");
+
 if (process.env.NODE_ENV === "dev") app.use(morgan("combined"));
 
-if (process.env.NODE_ENV === "prod") {
-  app.use(express.static(path.join(__dirname, "../..", "client", "build")));
+if (process.env.NODE_ENV === "prod") app.use(express.static(buildPath));
 
-  app.get("/", (req, res) =>
-    res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"))
-  );
-}
-
-app.get("/search", async (req, res, next) => {
+app.get("/p/search", async (req, res, next) => {
   const queryParam = req.query.q;
 
   let result;
@@ -65,9 +61,8 @@ app.get("/product/:id", async (req, res, next) => {
   const quantityHistory = result.rows;
 
   const [priceTimestamps, priceValues] = transformHistory(priceHistory);
-  const [quantityTimestamps, quantityValues] = transformHistory(
-    quantityHistory
-  );
+  const [quantityTimestamps, quantityValues] =
+    transformHistory(quantityHistory);
 
   const responseBody = {
     price: {
@@ -82,6 +77,9 @@ app.get("/product/:id", async (req, res, next) => {
 
   res.json(responseBody);
 });
+
+if (process.env.NODE_ENV === "prod")
+  app.get("/*", (req, res) => res.sendFile(buildPath + "/index.html"));
 
 const PORT = process.env.PORT || 5000;
 
