@@ -92,16 +92,33 @@ app.listen(PORT, () =>
 function transformHistory(records) {
   if (!records.length) return [];
 
-  let recordTimestamps = [records[0].first_retrieved];
-  const partialTimestamps = records.flatMap((item) => {
-    const lastModified = item.last_modified;
-    lastModified.setSeconds(lastModified.getSeconds() + 1);
-    return [item.last_modified, lastModified];
+  const timestamps = [];
+  const values = [];
+
+  const length = records.length;
+
+  const lastRecord = records[length - 1];
+  records.push({
+    first_retrieved: addSeconds(lastRecord.last_modified, 2),
   });
-  recordTimestamps = recordTimestamps.concat(partialTimestamps);
-  recordTimestamps.pop();
 
-  const recordValues = records.flatMap((item) => [item.value, item.value]);
+  for (let i = 0; i < length; i++) {
+    const value = records[i].value;
 
-  return [recordTimestamps, recordValues];
+    records[i + 1].first_retrieved;
+    timestamps.push(
+      ...[
+        records[i].first_retrieved,
+        addSeconds(records[i + 1].first_retrieved, -1),
+      ]
+    );
+
+    values.push(...[value, value]);
+  }
+
+  return [timestamps, values];
+}
+
+function addSeconds(date, seconds) {
+  return new Date(date.getTime() + seconds * 1000);
 }
