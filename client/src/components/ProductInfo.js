@@ -1,7 +1,7 @@
 import config from "../config";
 
 function ProductInfo(props) {
-  const lastModified = new Date(props.info.last_modified);
+  const lastModified = new Date(props.info.modified_at);
 
   return (
     <>

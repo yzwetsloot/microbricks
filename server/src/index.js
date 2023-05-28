@@ -19,7 +19,7 @@ app.get("/p/search", async (req, res, next) => {
   let result;
   try {
     result = await db.query(
-      "SELECT * FROM product WHERE title ILIKE $1 OR id LIKE $1 OR ean LIKE $1 OR category ILIKE $1 ORDER BY last_modified DESC LIMIT $2",
+      "SELECT * FROM product WHERE title ILIKE $1 OR id LIKE $1 OR ean LIKE $1 OR category ILIKE $1 ORDER BY modified_at DESC LIMIT $2",
       [`%${queryParam}%`, process.env.PRODUCT_LIMIT]
     );
   } catch (err) {
@@ -39,7 +39,7 @@ app.get("/product/:id", async (req, res, next) => {
 
   try {
     result = await db.query(
-      "SELECT * FROM price WHERE id = $1 ORDER BY last_modified",
+      "SELECT * FROM price WHERE id = $1 ORDER BY modified_at",
       [id]
     );
   } catch (err) {
@@ -51,7 +51,7 @@ app.get("/product/:id", async (req, res, next) => {
   // retrieve quantity history
   try {
     result = await db.query(
-      "SELECT * FROM quantity WHERE id = $1 ORDER BY last_modified",
+      "SELECT * FROM quantity WHERE id = $1 ORDER BY modified_at",
       [id]
     );
   } catch (err) {
@@ -99,18 +99,15 @@ function transformHistory(records) {
 
   const lastRecord = records[length - 1];
   records.push({
-    first_retrieved: addSeconds(lastRecord.last_modified, 2),
+    created_at: addSeconds(lastRecord.modified_at, 2),
   });
 
   for (let i = 0; i < length; i++) {
     const value = records[i].value;
 
-    records[i + 1].first_retrieved;
+    records[i + 1].created_at;
     timestamps.push(
-      ...[
-        records[i].first_retrieved,
-        addSeconds(records[i + 1].first_retrieved, -1),
-      ]
+      ...[records[i].created_at, addSeconds(records[i + 1].created_at, -1)]
     );
 
     values.push(...[value, value]);
